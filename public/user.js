@@ -19,17 +19,21 @@ function userListView(users){
                 `<th>First Name</th>` +
                 `<th>Email</th>` +
                 `<th>Username</th>` +
-                `<th>Role</th></tr></thead>`;
+                `<th>Role</th>` +
+                `<th>lastModified</th></tr></thead>`;
     
-    users.forEach(user => {
-            view = view + 
-            `<tr><td>${user['userID']}</td>` +
-            `<td>${user['lastname']}</td>` +
-            `<td>${user['firstname']}</td>` +
-            `<td>${user['email']}</td>` +
-            `<td>${user['username']}</td>` +
-            `<td>${user['urole']}</td></tr>`;
-    });
+        users.forEach(user => { 
+        view += `<tr>
+            <td>${user['userID']}</td>
+            <td>${user['lastname']}</td>
+            <td>${user['firstname']}</td>
+            <td>${user['email']}</td>
+            <td>${user['username']}</td>
+            <td>${user['urole']}</td>
+            <td>${new Date(user['lastModified']).toLocaleString()}</td>
+        </tr>`; 
+        });
+
 
     table.innerHTML=view;
 }
@@ -38,7 +42,7 @@ document.getElementById("refresh").addEventListener("click", userListController)
 userListController();
 
 
-// Part 2 begins here
+
 async function addUserController(event) {
     event.preventDefault();
 
