@@ -1,8 +1,15 @@
 async function userListController() {
-    let response = await fetch('http://localhost:3000/users');
-    let users = await response.json();
-    userListView(users);
-    return users;
+    let response = await fetch('/api/users');
+    let result = await response.json();
+
+    if (response.ok) {
+        userListView(result.data);
+        document.getElementById("message").innerHTML = "Users loaded";
+    } else {
+        document.getElementById("message").innerHTML = result.error;
+    }
+
+    return result.data;
 }
 
 function userListView(users){
@@ -12,7 +19,7 @@ function userListView(users){
                 `<th>First Name</th>` +
                 `<th>Email</th>` +
                 `<th>Username</th>` +
-                `<th>Password</th></tr></thead>`;
+                `<th>Role</th></tr></thead>`;
     
     users.forEach(user => {
             view = view + 
@@ -21,14 +28,10 @@ function userListView(users){
             `<td>${user['firstname']}</td>` +
             `<td>${user['email']}</td>` +
             `<td>${user['username']}</td>` +
-            `<td>${user['passwd']}</td></tr>`;
-            
-            
+            `<td>${user['urole']}</td></tr>`;
     });
+
     table.innerHTML=view;
-
-
-
 }
 
 document.getElementById("refresh").addEventListener("click", userListController);
@@ -45,10 +48,10 @@ async function addUserController(event) {
         lastname: document.getElementById("lastname").value,
         email: document.getElementById("email").value,
         passwd: document.getElementById("passwd").value,
-        urole: "user"
+        urole: document.getElementById("urole").value
     };
 
-    let response = await fetch('http://localhost:3000/users', {
+    let response = await fetch('/api/users', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -56,9 +59,14 @@ async function addUserController(event) {
         body: JSON.stringify(newUser)
     });
 
+    let result = await response.json();
+
     if (response.ok) {
+        document.getElementById("message").innerHTML = "User added";
         document.getElementById("userForm").reset();
         userListController();
+    } else {
+        document.getElementById("message").innerHTML = result.error;
     }
 }
 
